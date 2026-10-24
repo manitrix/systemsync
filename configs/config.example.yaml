@@ -1,0 +1,15 @@
+timeout: 10s
+sample_interval: 1s
+memory_percent: 90
+disk_percent: 90
+cpu_percent: 90
+log_limit: 50
+concurrency: 4
+disabled_collectors: []
+format: text
+ai:
+  provider: ollama
+  endpoint: http://localhost:11434
+  model: llama3.2
+  external_consent: false
+  key_env: SSYNC_API_KEY

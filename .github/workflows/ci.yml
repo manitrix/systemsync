@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: test -z "$(gofmt -l cmd internal pkg test)"
+      - run: go test ./...
+      - run: go vet ./...
+      - run: go test -race ./...
+      - run: go test -tags=integration ./test/...
+      - run: make build
+      - run: bin/ssync doctor --format json
+      - run: make release VERSION=ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-builds
+          path: |
+            dist/*.tar.gz
+            dist/SHA256SUMS
